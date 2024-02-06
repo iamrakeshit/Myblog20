@@ -11,5 +11,5 @@ public interface PostService {
 
     PostDto getPostById(long id);
 
-    List<PostDto> getAllPost();
+    List<PostDto> getAllPost(int pageNo, int pageSize);
 }
