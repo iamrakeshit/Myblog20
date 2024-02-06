@@ -7,9 +7,12 @@ import com.myblog.myblog20.repository.PostRepository;
 import com.myblog.myblog20.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostServiceImpl implements PostService {
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -17,21 +20,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto createPost(PostDto postDto) {
+        Post post = mapToEntity(postDto);
+        Post spost = postRepository.save(post);
+        PostDto dto = mapToDto(spost);
+        return dto;
+    }
+    PostDto mapToDto(Post post){
+        PostDto dto = new PostDto();
+        dto.setId(post.getId());
+        dto.setName(post.getName());
+        dto.setEmail(post.getEmail());
+        dto.setMobile(post.getMobile());
+        return  dto;
+    }
+    Post mapToEntity(PostDto postDto){
         Post post = new Post();
         post.setName(postDto.getName());
         post.setEmail(postDto.getEmail());
         post.setMobile(postDto.getMobile());
-
-        Post spost = postRepository.save(post);
-
-        PostDto dto = new PostDto();
-        dto.setId(spost.getId());
-        dto.setName(spost.getName());
-        dto.setEmail(spost.getEmail());
-        dto.setMobile(spost.getMobile());
-        return dto;
+        return post;
     }
-
     @Override
     public PostDto getPostById(long id) {
        Post post = postRepository.findById(id).orElseThrow(
@@ -43,5 +51,12 @@ public class PostServiceImpl implements PostService {
         dto.setEmail(post.getEmail());
         dto.setMobile(post.getMobile());
         return dto;
+    }
+
+    @Override
+    public List<PostDto> getAllPost() {
+        List<Post> posts = postRepository.findAll();
+        List<PostDto> dtos = posts.stream().map(post -> mapToDto(post)).collect(Collectors.toList());
+        return dtos;
     }
 }
