@@ -29,14 +29,14 @@ public class PostController {
         PostDto dto = postService.getPostById(id);
         return new ResponseEntity<>(dto, HttpStatus.FOUND);
     }
-    //      http://localhost:8080/post/api/getAll?pageNo=0&pageSize=3&sortBy="name"
+    //      http://localhost:8080/post/api/getAll?pageNo=0&pageSize=3&sortBy=name
     @GetMapping("/getAll")
     public List<PostDto> getAllPost(
             @RequestParam(name="pageNo",required = false,defaultValue = "0") int pageNo,
-            @RequestParam(name ="pagSize",required = false,defaultValue = "5") int pageSize
-           // @RequestParam(name ="sortBy",required = false,defaultValue = "id") String sortBy
+            @RequestParam(name ="pagSize",required = false,defaultValue = "5") int pageSize,
+            @RequestParam(name ="sortBy",required = false,defaultValue = "id") String sortBy
     ){
-        List<PostDto> dtos =  postService.getAllPost(pageNo,pageSize);
+        List<PostDto> dtos =  postService.getAllPost(pageNo,pageSize,sortBy);
         return dtos;
     }
 }
