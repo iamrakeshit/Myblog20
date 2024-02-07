@@ -5,6 +5,7 @@ import com.myblog.myblog20.exception.ResourseNotFoundException;
 import com.myblog.myblog20.payload.PostDto;
 import com.myblog.myblog20.repository.PostRepository;
 import com.myblog.myblog20.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +17,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
-    private final PostRepository postRepository;
+    private PostRepository postRepository;
+    private ModelMapper modelMapper;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository,ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -30,18 +33,11 @@ public class PostServiceImpl implements PostService {
         return dto;
     }
     PostDto mapToDto(Post post){
-        PostDto dto = new PostDto();
-        dto.setId(post.getId());
-        dto.setName(post.getName());
-        dto.setEmail(post.getEmail());
-        dto.setMobile(post.getMobile());
+        PostDto dto = modelMapper.map(post, PostDto.class);
         return  dto;
     }
     Post mapToEntity(PostDto postDto){
-        Post post = new Post();
-        post.setName(postDto.getName());
-        post.setEmail(postDto.getEmail());
-        post.setMobile(postDto.getMobile());
+        Post post = modelMapper.map(postDto, Post.class);
         return post;
     }
     @Override
@@ -49,11 +45,7 @@ public class PostServiceImpl implements PostService {
        Post post = postRepository.findById(id).orElseThrow(
                 ()-> new ResourseNotFoundException("Post not found with id "+ id)
         );
-        PostDto dto = new PostDto();
-        dto.setId(post.getId());
-        dto.setName(post.getName());
-        dto.setEmail(post.getEmail());
-        dto.setMobile(post.getMobile());
+       PostDto dto = mapToDto(post);
         return dto;
     }
 
@@ -67,4 +59,3 @@ public class PostServiceImpl implements PostService {
         return dtos;
     }
 }
-//                       Start from 24.01.24
