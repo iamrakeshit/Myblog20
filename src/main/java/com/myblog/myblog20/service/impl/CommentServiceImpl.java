@@ -33,4 +33,9 @@ public class CommentServiceImpl implements CommentService {
         dto.setContent(savedComment.getContent());
         return dto;
     }
+
+    @Override
+    public void deleteComment(long id) {
+        commentRepository.deleteById(id);
+    }
 }
