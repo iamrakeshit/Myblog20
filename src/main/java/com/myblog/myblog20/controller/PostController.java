@@ -29,6 +29,7 @@ public class PostController {
         PostDto dto = postService.getPostById(id);
         return new ResponseEntity<>(dto, HttpStatus.FOUND);
     }
+    //      http://localhost:8080/post/api/getAll
     //      http://localhost:8080/post/api/getAll?pageNo=0&pageSize=3&sortBy=name&sortDir=desc
     @GetMapping("/getAll")
     public List<PostDto> getAllPost(
